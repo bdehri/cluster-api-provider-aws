@@ -296,6 +296,9 @@ func (s *Service) UpdateASG(scope *scope.MachinePoolScope) error {
 
 	if scope.MachinePool.Spec.Replicas != nil {
 		input.DesiredCapacity = aws.Int64(int64(*scope.MachinePool.Spec.Replicas))
+		if *scope.MachinePool.Spec.Replicas < scope.AWSMachinePool.Spec.MinSize {
+			input.DesiredCapacity = aws.Int64(int64(scope.AWSMachinePool.Spec.MinSize))
+		}
 	}
 
 	if scope.AWSMachinePool.Spec.MixedInstancesPolicy != nil {
